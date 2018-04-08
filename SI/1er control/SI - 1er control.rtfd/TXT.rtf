@@ -1,0 +1,84 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fnil\fcharset0 Calibri;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww16360\viewh17980\viewkind0
+\deftab720
+\pard\pardeftab720\sl360\sa240\partightenfactor0
+
+\f0\b\fs32 \cf2 \expnd0\expndtw0\kerning0
+EJEMPLO Examen parcial Seguridad Inform\'e1tica 
+\b0 \
+
+\b 2016-QP 
+\b0 \
+\pard\pardeftab720\sl400\sa240\partightenfactor0
+\cf2 1. Cada l\'ednea del archivo etc/passwd de linux contiene: \uc0\u8232 	a. Una contrase\'f1a cifrada\u8232 	b. La fecha de caducidad de la contrase\'f1a\u8232 
+\b 	c. El identificador de usuario \uc0\u8232 	d. El identificador de grupo 
+\b0 \
+2. La implantaci\'f3n del sistema de control de acceso lock-key: \
+
+\b 	a. Combina las listas de control de acceso con las listas de capacidades \uc0\u8232 
+\b0 	b. Cada objeto tiene una \'fanica identidad (patr\'f3n de bits: lock)\uc0\u8232 	c. Cada dominio tiene una \'fanica identidad (patr\'f3n de bits: key)\u8232 	d. Toda la informaci\'f3n lock-key se almacena en una table global \
+3. El principio del m\'ednimo privilegio tiene los siguientes objetivos:\uc0\u8232 	a. Impedir la conmutaci\'f3n (switching) de dominios\u8232 
+\b 	b. Limitar el riesgo de da\'f1os causados por un programa malicioso o err\'f3neo
+\b0 \uc0\u8232 	c. Minimizar los derechos requeridos por un usuario para realizar sus tareas\u8232 	d. Simplificar la implantaci\'f3n del Sistema de control de acceso. \
+4. Para acreditar la identidad de un usuario y darle acceso a un Servicio podemos usar: \uc0\u8232 
+\b 	a. Una contrase\'f1a desechable
+\b0 \uc0\u8232 	b. Un identificador de usuario \u8232 
+\b 	c. Un identificador biom\'e9trico\uc0\u8232 	d. Un token emitido por un servidor de identidad (tipo SSO, OpenID) 
+\b0 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sl400\sa240\partightenfactor0
+
+\b \cf2 Malware 
+\b0 \
+5. Cu\'e1les de las siguientes afirmaciones sobre c\'f3digo malicioso son ciertas: \uc0\u8232 
+\b 	a. En general los gusanos tienen un per\'edodo de incubaci\'f3n o latencia m\'e1s corto que los troyanos 
+\b0 \uc0\u8232 	b. Tanto los virus como los gusanos se ocultan dentro de otros programas, para pasar inadvertidos \u8232 	c. Los troyanos siempre se propagan (replican) de forma autom\'e1tica\u8232 	d. Los programas esp\'eda siempre se propagan de forma autom\'e1tica \
+6. Los antivirus utilizan las firmas de malware para:\uc0\u8232 	a. Detectar mutaciones en virus\u8232 
+\b 	b. Identificar virus conocidos
+\b0 \uc0\u8232 	c. Detectar nuevos virus \u8232 	d. Crear de reglas para el analizador basado en firmas \u8232 
+\b 	e. Analizar el sistema peri\'f3dicamente 
+\b0 \
+7. Cu\'e1l de las siguientes afirmaciones es cierta:\uc0\u8232 	a. Los sanbox no penalizan el rendimiento del Sistema\u8232 
+\b 	b. Los sandbox no se usan en combinaci\'f3n con sistemas AV basados en firmas
+\b0 \uc0\u8232 	c. AV basados en ponderaciones y AV basados en firmas son incompatibles\u8232 	d. Las variables de entorno no son importantes para detectar un virus \
+
+\b OS Sec 
+\b0 \
+8. Cu\'e1les de las siguientes afirmaciones son ciertas:\uc0\u8232 	a. Un worm necesita un programa host para ejecutarse\u8232 
+\b 	b. Un virus necesita un programa host para replicarse
+\b0 \uc0\u8232 	c. Los worms no tienen capacidad para reproducirse\u8232 	d. Cada vez que se ejecuta un virus, \'e9ste ejecuta su c\'f3digo malicioso \
+
+\b IP Sec 
+\b0 \
+9. IPSec usa criptograf\'eda de clave p\'fablica para ...\uc0\u8232 	a. Cifrar la carga \'fatil de los paquetes transmitidos a trav\'e9s de la VPN\u8232 
+\b 	b. Compartir una clave secreta durante el establecimiento de un canal seguro, cuando IKE S.A. es negociado
+\b0 \uc0\u8232 
+\b 	c. Autenticar los paquetes si AH est\'e1 activado
+\b0 \uc0\u8232 	d. Ninguna de las anteriores \
+10. \'bfCu\'e1l de los siguientes usos de VPN son correctos?\uc0\u8232 	a. Arquitectura Gateway-to-Gateway para usuarios remotos\u8232 	b. Arquitectura Host-to-Host para tareas de administraci\'f3n de sistemas\u8232 	c. Arquitectura Host-to-Gateway para establecer conexiones seguras entre las redes de un campus\u8232 	d. Arquitectura Gateway-to-Gateway para establecer conexiones seguras entre las redes de un campus \
+\pard\pardeftab720\sl280\sa240\partightenfactor0
+\cf2 \
+11. La empresa de lampisteria \'93YahPoo, Inc.\'94 Dispone de la siguiente arquitectura de red, y os han contratado para mejorar las pol\'edticas de seguridad dentro de su Firewall iptables. \
+iptables \'96t filter \'96A FORWARD \'96i eth0 -o eth1 \'96p TCP \'96dport ssh \'96j ACCEPT\uc0\u8232 iptables \'96t filter \'96A FORWARD \'96o eth0 -i eth1 \'96m state -sport ssh --state established \'96j ACCEPT\
+Que hacen estas reglas? Asumir pol\'edtica por defecto DROP \
+\pard\pardeftab720\sl340\sa240\partightenfactor0
+\cf2 	..
+\f1 \uc0\u61608 
+\f0  Permitir el acceso desde la red interna a los servidores de la DMZ usando el protocolo ssh\uc0\u8232 	..
+\f1 \uc0\u61608 
+\f0  Permitir el acceso desde la DMZ al servidor de la red interna usando el protocolo ssh\uc0\u8232 	..
+\f1 \uc0\u61608 
+\f0  Permitir el acceso desde la DMZ todos los ordenadores de la red interna usando el protocolo ssh\uc0\u8232 	..
+\f1 \uc0\u61608 
+\f0  Permitir el acceso desde la red Internet a los servidores de la DMZ usando el protocolo ssh \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 {{\NeXTGraphic page1image3007568.png \width12 \height12 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\pardeftab720\sl280\partightenfactor0
+\cf2  {{\NeXTGraphic page3image3802432.png \width7911 \height4574 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬} {{\NeXTGraphic page1image3007568.png \width12 \height12 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬} \
+}

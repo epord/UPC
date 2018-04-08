@@ -1,0 +1,180 @@
+Instal.lació del viewer de gràfics 
+----------------------------------
+
+A. Instal.lació en Ubuntu 
+B. Instal.lació en Windows (via VirtualBox)
+C. Instal.lació en MacOS
+
+
+A. Instal.lació en Ubuntu 
+--------------------------
+
+Hem provat diferents versions: 16.04 LTS, 17.04...
+
+1. Instal.lar requeriments previs de Qt, OpenGL i GLU
+
+		sudo apt-get install build-essential libgl1-mesa-dev libglu1-mesa-dev
+
+2. Descarregar Qt 5 (Desktop Open Source version; hem provat Qt 5.5, 5.7, Qt 5.9...)
+
+		https://info.qt.io/download-qt-for-application-development
+		OpenSource package -> Qt online installer for linux
+
+3. Instal.lar Qt 5.  
+			
+		chmod +x qt-unified-linux-x64-3.0.0-omline.run
+		sudo ./qt-unified-linux-x64-3.0.0-omline.run
+		
+		Completar la instal.lació: 
+		 Skip unified Qt account
+		 Folder: /opt/Qt
+		 Components: per defecte (5.9.1)
+			
+	Opcional: editar ~/.bashrc i afegir la linia:
+
+		alias qmake-qt5='/opt/Qt/5.9.1/gcc_64/bin/qmake'
+	
+4. Descarregar i descomprimir la darrera versió del viewer. 
+
+	http://www.cs.upc.edu/~virtual/G/index.php?dir=2.%20Laboratori/viewer/
+	tar -xzvf...
+	
+5. Descarregar models, textures i fitxers de test:
+
+		http://www.cs.upc.edu/~virtual/G/index.php?dir=2.%20Laboratori/viewer/versio-0.12-2015-10-30/
+		assig-models.zip
+		assig-Textures.zip	
+		tests.zip
+		
+	Descomprimir els zip anteriors (models, textures i tests), en els
+	directoris 
+	
+		/assig/grau-g/models
+		/assig/grau-g/Textures
+		/assig/grau-g/tests
+
+		o bé penjant de NewViewer_0b84705:
+		
+		NewViewer_0b84705/models
+		NewViewer_0b84705/Textures
+		NewViewer_0b84705/tests		
+
+	Nota: la versions més actualitzades les podeu copiar (ex. tar) directament de:
+ 
+		/assig/grau-g/models
+		/assig/grau-g/Textures
+		/assig/grau-g/tests
+
+6. Compilar el viewer
+
+	cd NewViewer_0b84705   (el codi pot variar segons la versió)
+	/opt/Qt/5.9.1/gcc_64/bin/qmake
+	make
+
+7. Executar viewer
+
+	./GviewerSL   (per provar shaders; primera part del curs)
+	./Gviewer     (per provar plugins; segona part del curs)
+	
+	En algun cas pot ser necessari editar els fitxers ./GviewerSL i ./Gviewer i canviar el path de les carpetes amb els models, textures i tests:
+	
+ 	 assign "VMODELS"   /assig/grau-g/models   $T/models
+	 assign "VTEXTURES" /assig/grau-g/Textures $T/Textures
+	 assign "VTESTS"    /assig/grau-g/tests    $T/tests
+
+
+
+B. Instal.lació en Windows (via VirtualBox)
+-------------------------------------------
+
+1. Descarregar i instal.lar VirtualBox per windows hosts. Hem provat 5.1.26
+   https://www.virtualbox.org/
+
+2. Descarregar Ubuntu Desktop. Hem provat 17.04
+   https://www.ubuntu.com/download/desktop
+   --> ubuntu-17.04-desktop-amd64.iso
+   
+3. Crear una màquina virtual (VirtualBox) amb aquests paràmetres; els [] només indiquen valors de referència:
+   Tipus: Linux
+   Versió: Ubuntu (64-bit)
+        En algunes màquines pot ser necessari activar VT (Virtualization Technologies) a la BIOS per poder
+	usar MVs de 64 bits.
+   Memòria: >2 GB [8 GB]
+   Disc dur: >25 GB [32 GB, VDI, dinàmic]
+  
+4. Configurar la resta de paràmetres de la MV:
+   Sistema -> Processador: [4 CPUs] 
+   Pantalla: Habilitar aceleración 3D (proveu activar-ho, però depenent del vostre 
+   hardware ho haureu de desactivar, especialment a la segona part del curs)
+   
+5. Iniciar la màquina virtual. 
+   Quan demani el disc d'inici, caldrà indicar-li el ubuntu-17.04-desktop-amd64.iso
+   En algunes màquines pot ser necessari activar VT (Virtualization Technologies) a la BIOS.
+
+6. Seguir els passos per instal.lar Ubuntu a la màquina virtual:
+	Instal.la Ubuntu -> Descarrega actualitzacions; instal.la programari de tercers
+	Esborra el disc i instal.la ubuntu (ei! a la màquina virtual!)
+	Completar la instal.lació i re-iniciar la MV
+
+7. Seguir els passos d'instal.lació en Ubuntu
+
+
+C. Instal.lació en MacOS 
+-------------------------
+
+Requeriments:
+
+* Qt 5 (l'hem provat amb Qt5.5)
+
+* Cal que el vostre mac suporti OpenGL 3.3 (almenys). Podeu comprovar
+  si és el cas, sabent la targeta gràfica que teniu i la versió del
+  SO, i consultant https://developer.apple.com/opengl/capabilities/
+
+Instal·lació:
+
+El procediment és com en el cas de Linux, però hi ha algunes
+consideracions especials.
+
+Quan completeu el qmake...make (ignoreu un warning en la compilació de
+glwidget.cpp), us haurà creat dins de NewViewerQt5/viewer/bin una
+aplicació viewerd.app. Tanmateix, tingueu en compte que:
+
+1. L'aplicació buscarà els plugins en un path relatiu a aquesta
+posició. Per tant, si moveu l'app a un altre lloc (a /Applications,
+per exemple), deixarà de trobar-los.
+
+2. El binari tindrà uns valors definits per a variables d'entorn
+adequats per a un Mac, quan es compili a un Mac. En particular per
+defecte farà servir com a editor de shaders el
+/Applications/TextEditor.app, i per a veure imatges (textures,
+tests,...) farà servir /Applications/Preview.app.
+
+3. Podeu definir altres aplicacions com en el cas de Linux. Per
+exemple amb
+
+	export VEDITOR=/Applications/Xcode.app
+
+per a fer servir l'editor de l'Xcode pels shaders (molt més pesant,
+però us colorarà el codi...). Tanmateix, aquestes variables
+s'heretaran a l'entorn del procés (i per tant tindran efecte) SOLS si
+des del mateix terminal l'executeu, sigui fent
+
+    open viewer/bin/viewerd.app
+
+o (millor)
+
+    viewer/bin/viewerd.app/Contents/MacOS/viewerd
+
+Però NO si l'obriu amb doble click al finder!
+
+4. la segona forma d'engegar un viewer al punt anterior us permetrà
+veure els missatges que aquest escrigui en stdout.
+
+5. Amb les mateixes consideracions d'abans, podeu definir, com a la
+versió linux, una variable d'entorn VPLUGINS amb uns plugins que
+vulgueu carregar per defecte en arrancar el programa. Però recordeu
+que no heu de fer servir els noms ".so" sinó ".dylib":
+
+    export
+    VPLUGINS="libdraw-vbo-ext.dylib;libshaderloader.dylib;libnavigatedefault.dylib"
+

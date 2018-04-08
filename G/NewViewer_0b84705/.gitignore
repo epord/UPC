@@ -1,0 +1,6 @@
+Makefile
+build
+*.o
+*.so
+*.html
+*~
