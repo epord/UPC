@@ -41,21 +41,48 @@ que representa el mensaje utilizando precisión infinita (reescalado)
 
 """
 
+def get_reescalate_type(min, max, R):
+    if max < R/2:
+        return 1
+    if min >= R/2:
+        return 2
+    if min >= R/4 and max < 3*R/4:
+        return 3
+    return None
+
 def Arithmetic(msg, alf, p):
     F, R = cdf(p)
     m = 0
     M = R
-    print("m: " + str(m) + " M: " + str(M))
+    ans = ''
+    reescalation_counter = 0
 
-    old_m = m
-    m = m + (M - m) * F[alf.index(msg[0])]
-    M = old_m + (M - old_m) * F[alf.index(msg[0]) + 1]
+    for c in msg:
+        min = round((M - m) / F[-1] * F[alf.index(c)] + m)
+        max = round((M - m) / F[-1] * F[alf.index(c) + 1] + m)
+        reescalation_type = get_reescalate_type(min, max, R)
+        while reescalation_type is not None:
+            if reescalation_type == 1:
+                ans += '0' + '1' * reescalation_counter
+                reescalation_counter = 0
+                min *= 2
+                max *= 2
+            if reescalation_type == 2:
+                ans += '1' + '0' * reescalation_counter
+                reescalation_counter = 0
+                min = 2 * min - R
+                max = 2 * max - R
+            if reescalation_type == 3:
+                reescalation_counter += 1
+                min = 2 * min - R/2
+                max = 2 * max - R/2
+            print("min: " + str(min) + " max: " + str(max) + " type: " + str(reescalation_type))
+            reescalation_type = get_reescalate_type(min, max, R)
+        print("No more")
+        m = min
+        M = max
+    return ans
 
-    # for c in msg:
-    #     old_m = m
-    #     m = m + (M - m) * F[alf.index(c)]
-    #     M = old_m + (M - old_m) * F[alf.index(c) + 1]
-    return m, M
 
 mensaje='ccda'
 alfabeto=['a','b','c','d']

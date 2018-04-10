@@ -220,23 +220,29 @@ Generar 10 mensajes aleatorios de longitud 10<=n<=100 aleatoria
 con las frecuencias esperadas 50, 20, 15, 10 y 5 para los caracteres
 'a', 'b', 'c', 'd', 'e' y codificarlo.
 '''
-alfabeto=['a','b','c','d','e']
-probabilidades=[0.5,0.2,0.15,0.1,.05]
-U = 50*'a'+20*'b'+15*'c'+10*'d'+5*'e'
-def rd_choice(X,k = 1):
-    Y = []
-    for _ in range(k):
-        Y +=[random.choice(X)]
-    return Y
+# alfabeto=['a','b','c','d','e']
+# probabilidades=[0.5,0.2,0.15,0.1,.05]
+# U = 50*'a'+20*'b'+15*'c'+10*'d'+5*'e'
+# def rd_choice(X,k = 1):
+#     Y = []
+#     for _ in range(k):
+#         Y +=[random.choice(X)]
+#     return Y
+#
+# l_max=100
+#
+# for _ in range(10):
+#     n=random.randint(10,l_max)
+#     L = rd_choice(U, n)
+#     mensaje = ''
+#     for x in L:
+#         mensaje += x
+#     print('---------- ',mensaje)
+#     C = EncodeArithmetic1(mensaje,alfabeto,probabilidades)
+#     print(C)
 
-l_max=100
-
-for _ in range(10):
-    n=random.randint(10,l_max)
-    L = rd_choice(U, n)
-    mensaje = ''
-    for x in L:
-        mensaje += x
-    print('---------- ',mensaje)
-    C = EncodeArithmetic1(mensaje,alfabeto,probabilidades)
-    print(C)
+code='1110000101'
+longitud=4
+alfabeto=['a','b','c','d']
+probabilidades=[0.4,0.3,0.2,0.1]
+print(DecodeArithmetic(code,longitud,alfabeto,probabilidades))
