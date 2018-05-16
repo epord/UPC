@@ -52,10 +52,6 @@ def LZ77Code(mensaje,S=2,W=18):
             i += 1
     return ans
 
-mensaje='aaaaaaaaa'
-print(LZ77Code(mensaje))
-
-
 
 """
 Dado un mensaje codificado con el algoritmo LZ77 hallar el mensaje 
@@ -78,9 +74,7 @@ def LZ77Decode(codigo):
                 ans += e[2]
     return ans
 
-code = [[0, 0, 'p'], [0, 0, 'a'], [0, 0, 't'], [2, 1, 'd'], [0, 0, 'e'], [0, 0, 'c'], [4, 1, 'b'], [0, 0, 'r'], [3, 1, 'EOF']]
-print(LZ77Decode(code))
-    
+    z
 
 
 """

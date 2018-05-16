@@ -31,12 +31,11 @@ def LZ78Code(mensaje):
                                 i += 1
                         if i == len(mensaje):
                                 ans += [[dict.index(accum), 'EOF']]
-                                return ans
+                                return ans, dict
                         ans += [[dict.index(accum), mensaje[i]]]
                         dict.append(accum + mensaje[i])
                 i += 1
-        return ans + [[0, "EOF"]]
-
+        return ans + [[0, "EOF"]], dict
 
 """
 Dado un mensaje codificado con el algoritmo LZ78 hallar el mensaje 
@@ -62,6 +61,11 @@ def LZ78Decode(codigo):
                         ans += accum
         return ans[0:-3]
 
+
+ans, dict = LZ78Code('a'*21)
+print(ans)
+print(dict)
+exit(0)
 
 mensaje='wabba wabba wabba wabba woo woo woo'
 mensaje_codificado=LZ78Code(mensaje)

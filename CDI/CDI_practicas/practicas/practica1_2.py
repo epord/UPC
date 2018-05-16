@@ -17,6 +17,7 @@ def  kraft1(L, q=2):
     return sum <= 1
 
 
+
 '''
 Dada la lista L de longitudes de las palabras de un  
 código q-ario, calcular el máximo número de palabras 
@@ -69,6 +70,7 @@ def code(L,q=2):
         last_used_symbol_id[inc_id] += 1
         code.append(str_code)
     return code
+
 
 '''
 Ejemplo
