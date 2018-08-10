@@ -1,32 +1,17 @@
 #include "AnimateVertices.h"
 #include "glwidget.h"
+#include <QTime>
 
+QTime t(0,0,0,0);
 
 void AnimateVertices::onPluginLoad()
 {
-	QString vs_src =
-        "#version 330 core\n"
-        "uniform mat4 modelViewProjectionMatrix;"
-        "in vec3 vertex;"
-        "in vec3 color;"
-        "out vec4 frontColor;"
-        "void main() {"
-        "  gl_Position = modelViewProjectionMatrix * vec4(vertex,1.0);"
-        "  frontColor=vec4(color,1.0);"
-        "}";
     vs = new QOpenGLShader(QOpenGLShader::Vertex, this);
-    vs->compileSourceCode(vs_src);
+    vs->compileSourceFile("/Users/epord/UPC/G/NewViewer_1b32186/plugins/AnimateVertices/animate-vertices-1.vert");
     cout << "VS log:" << vs->log().toStdString() << endl;
     
-    QString fs_src =
-        "#version 330 core\n"
-        "in vec4 frontColor;\n"
-        "out vec4 fragColor;"
-        "void main() {"
-        "  fragColor = frontColor;"
-        "}";
     fs = new QOpenGLShader(QOpenGLShader::Fragment, this);
-    fs->compileSourceCode(fs_src);
+    fs->compileSourceFile("/Users/epord/UPC/G/NewViewer_1b32186/plugins/AnimateVertices/animate-vertices-1.frag");
     cout << "FS log:" << fs->log().toStdString() << endl;
     
     program = new QOpenGLShaderProgram(this);
@@ -34,15 +19,22 @@ void AnimateVertices::onPluginLoad()
     program->addShader(fs);
     program->link();
     cout << "Link log:" << program->log().toStdString() << endl;
+    t.start();
 }
 
 void AnimateVertices::preFrame()
 {
     // bind shader and define uniforms
     program->bind();
-    program->setUniformValue("n", 6);
+    program->setUniformValue("n", 2);
     QMatrix4x4 MVP = camera()->projectionMatrix() * camera()->viewMatrix();
     program->setUniformValue("modelViewProjectionMatrix", MVP);
+    program->setUniformValue("normalMatrix", camera()->viewMatrix().normalMatrix());
+    program->setUniformValue("PI", 3.1415927535f);
+    program->setUniformValue("freq", 1);
+    program->setUniformValue("amplitude", 0.1f);
+    program->setUniformValue("time", t.elapsed()/1000.0f);
+    program->setUniformValue("f", QVector4D(0.5f,0.5f,1,0.0f));
 }
 
 void AnimateVertices::postFrame()

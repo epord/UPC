@@ -1,2 +1,2 @@
-TARGET     = $$qtLibraryTarget(show-help2)
+TARGET     = $$qtLibraryTarget(show-help8)
 include(../common.pro)

@@ -21,6 +21,8 @@
 
 #include <vector>
 #include "plugin.h"
+#include <QOpenGLShader>
+#include <QOpenGLShaderProgram>
 
 using namespace std;
 
@@ -37,11 +39,18 @@ class DrawVBOng : public QObject, public Plugin
   void onSceneClear();
   void onPluginLoad();
   void onObjectAdd();
+  void preFrame();
+  void postFrame();
   bool drawScene();
    
  private:
   void addVBO(unsigned int currentObject);
+  void drawBoundingBox();
+  void calculateBoundingBoxes();
 
+  QOpenGLShaderProgram* program;
+  QOpenGLShader *fs, *vs;
+    
   // We will create a VBO for each object in the scene
   vector<GLuint> VAOs;          // ID of VAOs
   vector<GLuint> coordBuffers;  // ID of vertex coordinates buffer 
@@ -49,6 +58,8 @@ class DrawVBOng : public QObject, public Plugin
   vector<GLuint> stBuffers;     // ID of (s,t) buffer 
   vector<GLuint> colorBuffers;  // ID of color buffer  
   vector<GLuint> numIndices;    // Size (number of indices) in each index buffer
+  vector<Point> maxBoundingBox;    // Max point of bounding box in each index buffer
+  vector<Point> minBoundingBox;    // Min point of bounding box in each index buffer
 };
  
 #endif

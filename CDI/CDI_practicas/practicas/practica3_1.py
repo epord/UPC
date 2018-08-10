@@ -241,8 +241,9 @@ con las frecuencias esperadas 50, 20, 15, 10 y 5 para los caracteres
 #     C = EncodeArithmetic1(mensaje,alfabeto,probabilidades)
 #     print(C)
 
-code='1110000101'
-longitud=4
+code='11111110'
+longitud=2
 alfabeto=['a','b','c','d']
 probabilidades=[0.4,0.3,0.2,0.1]
 print(DecodeArithmetic(code,longitud,alfabeto,probabilidades))
+print(EncodeArithmetic1("dd", alfabeto, probabilidades))

@@ -1,0 +1,2 @@
+==215138== NVPROF is profiling process 215138, command: ./conv.exe
+======== Error: unified memory profiling failed.

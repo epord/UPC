@@ -1,0 +1,112 @@
+File size: 786488
+Reservado: 0
+Reservado: 0
+Offset:    54
+
+Kernel Elemento a Elemento
+Dimension problema: 512 filas x 512 columnas
+Dimension Block: 16 x 16 x 1 (256) threads
+Dimension Grid: 32 x 32 x 1 (1024) blocks
+Imagen original:
+45
+73
+84
+64
+62
+56
+52
+32
+68
+90
+70
+100
+23
+60
+73
+41
+138
+205
+193
+205
+Imagen resultante:
+46
+59
+62
+62
+59
+62
+62
+62
+68
+68
+64
+70
+70
+70
+73
+77
+138
+170
+186
+193
+Imagen resultante:
+46
+46
+46
+59
+59
+59
+62
+62
+62
+62
+62
+62
+59
+59
+59
+62
+62
+62
+62
+62
+62
+62
+62
+62
+68
+68
+68
+68
+68
+68
+64
+64
+64
+70
+70
+70
+70
+70
+70
+70
+70
+70
+73
+73
+73
+77
+77
+77
+138
+138
+138
+170
+170
+170
+186
+186
+186
+193
+193
+193

@@ -108,8 +108,8 @@ void ShowHelp::postFrame()
     program->bind();
     program->setUniformValue("colorMap", textureUnit);
     program->setUniformValue("WIDTH", float(glwidget()->width()));
-    program->setUniformValue("HEIGHT", float(glwidget()->height()));    
- 
+    program->setUniformValue("HEIGHT", float(glwidget()->height()));
+    
     // quad covering viewport 
     drawRect(g);
     program->release();

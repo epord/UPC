@@ -148,12 +148,12 @@ print(ratio_compresion)
 Si tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
 ¿cuál es la ratio de compresión?
 '''
-# Se puede guardar cada simbolo en orden alfabético de la siguiente manera: 6bits para indicar cuántos bits a continuación
-# corresponden la codificación de dicha letra (asumimos que no serán más de 64bits y luego los bits correspondientes a la codificación
+# Se puede guardar cada simbolo en orden alfabético de la siguiente manera: 4bits para indicar cuántos bits a continuación
+# corresponden la codificación de dicha letra (asumimos que no serán más de 16bits) y luego los bits correspondientes a la codificación
 
 dict_size = 0
 for k, v in m2c.items():
-    dict_size += len(v) + 6
+    dict_size += len(v) + 4
 
 print("Ratio con diccionario: " + str(8*len(mensaje)/(len(mensaje_codificado) + dict_size)))
 

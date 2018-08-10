@@ -1,2 +1,2 @@
-TARGET     = $$qtLibraryTarget(AnimateVertices1)
+TARGET     = $$qtLibraryTarget(AnimateVertices11)
 include(../common.pro)

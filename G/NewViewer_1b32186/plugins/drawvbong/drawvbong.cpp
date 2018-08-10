@@ -44,126 +44,156 @@ void DrawVBOng::cleanUp()
   colorBuffers.clear();
   VAOs.clear();
   numIndices.clear();
+  minBoundingBox.clear();
+  maxBoundingBox.clear();
 }
 
 bool DrawVBOng::drawScene()
 {
-  GLWidget &g = *glwidget();
-  g.makeCurrent();
-  for(unsigned int i=0; i<VAOs.size(); i++) // for each buffer (that is, for each object)
-    {
-      //      cout << "  Object " << i << " with " << numIndices[i] << " indices " << endl;
-      g.glBindVertexArray(VAOs[i]);
-      g.glDrawArrays(GL_TRIANGLES, 0, numIndices[i]);
-      //      cout << "  End " << endl;
-    }	
-  g.glBindVertexArray(0);
-  return true;
+  return false;
+}
+
+void DrawVBOng::drawBoundingBox()
+{
+    GLWidget &g = *glwidget();
+    g.makeCurrent();
+    
+    g.glBindVertexArray(VAOs[0]);
+    g.glDrawArrays(GL_LINE_STRIP, 0, 16);
+    g.glBindVertexArray(0);
 }
 
 void DrawVBOng::onPluginLoad()
 {
-  for(unsigned int i=0; i<scene()->objects().size(); i++)
-    addVBO(i);
+    calculateBoundingBoxes();
+    
+    vs = new QOpenGLShader(QOpenGLShader::Vertex, this);
+    vs->compileSourceFile("/Users/epord/UPC/G/NewViewer_1b32186/plugins/drawvbong/drawBoundingBox.vert");
+    cout << "VS log:" << vs->log().toStdString() << endl;
+    
+    fs = new QOpenGLShader(QOpenGLShader::Fragment, this);
+    fs->compileSourceFile("/Users/epord/UPC/G/NewViewer_1b32186/plugins/drawvbong/drawBoundingBox.frag");
+    cout << "FS log:" << fs->log().toStdString() << endl;
+    
+    program = new QOpenGLShaderProgram(this);
+    program->addShader(vs);
+    program->addShader(fs);
+    program->link();
+    cout << "Link log:" << program->log().toStdString() << endl;
 }
 
 void DrawVBOng::onObjectAdd()
 {
-  addVBO( scene()->objects().size() - 1 );
+    calculateBoundingBoxes();
+    cout << "ADDED OBJECT" << endl;
 }
 
-void DrawVBOng::addVBO(unsigned int currentObject)
+void DrawVBOng::preFrame()
 {
-  //
-  // For simplicity, we construct VBOs with replicated vertices (a copy
-  // for each triangle to which they belong:
-  //
-  const Object& obj = scene()->objects()[currentObject];
-  unsigned int numvertices = obj.faces().size()*3;  // it's all triangles...
-  vector<float> vertices; // (x,y,z)    Final size: 9*number of triangles
-  vector<float> normals;  // (nx,ny,nz) Final size: 9*number of triangles
-  vector<float> colors;   // (r, g, b)  Final size: 9*number of triangles
-  vector<float> texCoords;// (s, t)     Final size: 6*number of triangles
-  auto verts = obj.vertices();
-  auto Ns = obj.vertNormals();
-  auto texcords = obj.vertTexCoords();
+//    drawBoundingBox();
 
-  for (auto&& f: obj.faces()) {
-    Point P = verts[f.vertexIndex(0)].coord();
-    vertices.push_back(P.x()); vertices.push_back(P.y()); vertices.push_back(P.z());
-    Vector V=Ns[f.normalIndex(0)];
-    normals.push_back(V.x()); normals.push_back(V.y()); normals.push_back(V.z());
-    colors.push_back(fabs(V.x())); colors.push_back(fabs(V.y())); colors.push_back(fabs(V.z()));
-    auto TC=texcords[f.texcoordsIndex(0)];
-    texCoords.push_back(TC.first);  texCoords.push_back(TC.second);
-
-    P = verts[f.vertexIndex(1)].coord();
-    vertices.push_back(P.x()); vertices.push_back(P.y()); vertices.push_back(P.z());
-    V=Ns[f.normalIndex(1)];
-    normals.push_back(V.x()); normals.push_back(V.y()); normals.push_back(V.z());
-    colors.push_back(fabs(V.x())); colors.push_back(fabs(V.y())); colors.push_back(fabs(V.z()));
-    TC=texcords[f.texcoordsIndex(1)];
-    texCoords.push_back(TC.first);  texCoords.push_back(TC.second);
-
-    P = verts[f.vertexIndex(2)].coord();
-    vertices.push_back(P.x()); vertices.push_back(P.y()); vertices.push_back(P.z());
-    V=Ns[f.normalIndex(2)];
-    normals.push_back(V.x()); normals.push_back(V.y()); normals.push_back(V.z());
-    colors.push_back(fabs(V.x())); colors.push_back(fabs(V.y())); colors.push_back(fabs(V.z()));
-    TC=texcords[f.texcoordsIndex(2)];
-    texCoords.push_back(TC.first);  texCoords.push_back(TC.second);
 }
 
-  assert(vertices.size() == 3*numvertices);
-  assert(normals.size() == 3*numvertices);
-  assert(colors.size() == 3*numvertices);
-  assert(texCoords.size() == 2*numvertices);
+void DrawVBOng::postFrame()
+{
+    GLWidget &g = *glwidget();
+    
+    for(int i = 0; i < minBoundingBox.size(); i++) {
+        program->bind();
+        QMatrix4x4 MVP = camera()->projectionMatrix() * camera()->viewMatrix();
+        program->setUniformValue("modelViewProjectionMatrix", MVP);
+        program->setUniformValue("maxBoundingBox", QVector4D(maxBoundingBox[i].x(),maxBoundingBox[i].y(),maxBoundingBox[i].z(), 0));
+        program->setUniformValue("minBoundingBox", QVector4D(minBoundingBox[i].x(),minBoundingBox[i].y(),minBoundingBox[i].z(), 0));
+        
+        g.makeCurrent();
+        
+        g.glBindVertexArray(VAOs[0]);
+        g.glDrawArrays(GL_LINE_STRIP, 0, 16);
+        g.glBindVertexArray(0);
+        
+        program->release();
+    }
+}
 
-  // Step 2: Create VAO and empty buffers (coords, normals, ...)
-  GLWidget& g = *glwidget();
-  GLuint VAO;
-  g.glGenVertexArrays(1, &VAO);
-  VAOs.push_back(VAO);
-  g.glBindVertexArray(VAO);
-  
-  GLuint coordBufferID;
-  g.glGenBuffers(1, &coordBufferID);
-  coordBuffers.push_back(coordBufferID);
-  
-  GLuint normalBufferID;
-  g.glGenBuffers(1, &normalBufferID);
-  normalBuffers.push_back(normalBufferID);
-  
-  GLuint stBufferID;
-  g.glGenBuffers(1, &stBufferID);
-  stBuffers.push_back(stBufferID);
-  
-  GLuint colorBufferID;
-  g.glGenBuffers(1, &colorBufferID);
-  colorBuffers.push_back(colorBufferID);
-  
-  numIndices.push_back(numvertices);
-  // Step 3: Define VBO data (coords, normals, ...)
-  g.glBindBuffer(GL_ARRAY_BUFFER, coordBufferID);
-  g.glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
-  g.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
-  g.glEnableVertexAttribArray(0);
+void DrawVBOng::calculateBoundingBoxes()
+{
+    //
+    // For simplicity, we construct VBOs with replicated vertices (a copy
+    // for each triangle to which they belong:
+    //
+    unsigned int numvertices = 16;  // every vertex is present twice to create every edge
+    vector<float> vertices;
+    
+    // Cara frontal
+    vertices.push_back(0); vertices.push_back(0); vertices.push_back(0);
+    vertices.push_back(0); vertices.push_back(1); vertices.push_back(0);
+    vertices.push_back(1); vertices.push_back(1); vertices.push_back(0);
+    vertices.push_back(1); vertices.push_back(0); vertices.push_back(0);
 
-  g.glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
-  g.glBufferData(GL_ARRAY_BUFFER, sizeof(float)*normals.size(), &normals[0], GL_STATIC_DRAW);
-  g.glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  g.glEnableVertexAttribArray(1);
+    // Cara derecha
+    vertices.push_back(0); vertices.push_back(0); vertices.push_back(0);
+    vertices.push_back(0); vertices.push_back(0); vertices.push_back(1);
+    vertices.push_back(0); vertices.push_back(1); vertices.push_back(1);
+    vertices.push_back(0); vertices.push_back(1); vertices.push_back(0);
+    
+    // Cara trasera
+    vertices.push_back(0); vertices.push_back(1); vertices.push_back(1);
+    vertices.push_back(1); vertices.push_back(1); vertices.push_back(1);
+    vertices.push_back(1); vertices.push_back(0); vertices.push_back(1);
+    vertices.push_back(0); vertices.push_back(0); vertices.push_back(1);
+    
+    // Cara izquierda
+    vertices.push_back(1); vertices.push_back(0); vertices.push_back(1);
+    vertices.push_back(1); vertices.push_back(0); vertices.push_back(0);
+    vertices.push_back(1); vertices.push_back(1); vertices.push_back(0);
+    vertices.push_back(1); vertices.push_back(1); vertices.push_back(1);
 
-  g.glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
-  g.glBufferData(GL_ARRAY_BUFFER, sizeof(float)*colors.size(), &colors[0], GL_STATIC_DRAW);
-  g.glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  g.glEnableVertexAttribArray(2);
-
-  g.glBindBuffer(GL_ARRAY_BUFFER, stBufferID);
-  g.glBufferData(GL_ARRAY_BUFFER, sizeof(float)*texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
-  g.glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
-  g.glEnableVertexAttribArray(3);
-  
-  g.glBindBuffer(GL_ARRAY_BUFFER,0);
-  g.glBindVertexArray(0);
+    
+    // Step 2: Create VAO and empty buffers (coords, normals, ...)
+    GLWidget& g = *glwidget();
+    GLuint VAO;
+    g.glGenVertexArrays(1, &VAO);
+    VAOs.push_back(VAO);
+    g.glBindVertexArray(VAO);
+    
+    GLuint coordBufferID;
+    g.glGenBuffers(1, &coordBufferID);
+    coordBuffers.push_back(coordBufferID);
+    
+    // Step 3: Define VBO data (coords, normals, ...)
+    g.glBindBuffer(GL_ARRAY_BUFFER, coordBufferID);
+    g.glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    g.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    g.glEnableVertexAttribArray(0);
+    
+    g.glBindBuffer(GL_ARRAY_BUFFER,0);
+    g.glBindVertexArray(0);
+    
+//    vector<Object> objs = scene()->objects();
+//    for (int j = 0; j < objs.size(); j++) {
+//        Object obj = objs[j];
+//        auto verts = obj.vertices();
+//        Point max = verts[0].coord();
+//        Point min = verts[0].coord();
+//        for (int i = 1; i < verts.size(); i++) {
+//            if (verts[i].coord().x() < min.x()) min.setX(verts[i].coord().x());
+//            if (verts[i].coord().y() < min.y()) min.setY(verts[i].coord().y());
+//            if (verts[i].coord().z() < min.z()) min.setZ(verts[i].coord().z());
+//
+//            if (verts[i].coord().x() > max.x()) max.setX(verts[i].coord().x());
+//            if (verts[i].coord().y() > max.y()) max.setY(verts[i].coord().y());
+//            if (verts[i].coord().z() > max.z()) max.setZ(verts[i].coord().z());
+//        }
+//        minBoundingBox.push_back(min);
+//        maxBoundingBox.push_back(max);
+//    }
+    
+    // Add boundingBox of objects
+    vector<Object> objs = scene()->objects();
+    for (int i = 0; i < objs.size(); i++) {
+        Object& obj = objs[i];
+        obj.computeBoundingBox();
+        minBoundingBox.push_back(obj.boundingBox().min());
+        maxBoundingBox.push_back(obj.boundingBox().max());
+    }
 }
